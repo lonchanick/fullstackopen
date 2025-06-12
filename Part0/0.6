@@ -1,0 +1,46 @@
+```mermaid
+sequenceDiagram
+actor User
+participant Web-browser
+participant Server
+
+Web-browser->>Server: GET www.studies.cs.helsinki.fi/exampleapp/spa
+activate Server
+Server-->>Web-browser: spa.html (HTML document)
+deactivate Server
+
+Web-browser->>Server: GET www.studies.cs.helsinki.fi/exampleapp/main.css
+activate Server
+Server-->>Web-browser: main.css (the css file)
+deactivate Server
+
+Web-browser->>Server: GET www.studies.cs.helsinki.fi/exampleapp/spa.js
+activate Server
+Server-->>Web-browser: spa.js (the JavaScript file)
+deactivate Server
+
+Note right of Web-browser: The Web browser starts executing the JavaScript code that fetches the JSON from the Server
+
+Web-browser->>Server: GET www.studies.cs.helsinki.fi/exampleapp/data.json
+activate Server
+Server-->>Web-browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+deactivate Server
+
+Note right of Web-browser: The browser executes the callback function that renders the notes.
+
+Note left of User: The user types something in the input  field of the form and click submit button. 
+User-->>Web-browser:  Typing and submit the form
+activate Web-browser
+
+Note right of Web-browser: Then the browser uses the callback function to make a POST request with the new entry.
+
+Web-browser->>Server: POST www.studies.cs.helsinki.fi/exampleapp/new_note_spa 
+activate Server
+
+Note right of Web-browser: The server responds with status code 201 created. This time the server does not ask for a redirect, the browser stays on the same page, and it sends no further HTTP requests.
+
+Server-->>Web-browser: List of entries [{..},{..},{..}]
+deactivate Server
+
+Note right of Web-browser: Once again the browser executes the callback function that renders the notes.
+```
