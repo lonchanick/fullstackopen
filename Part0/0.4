@@ -1,0 +1,42 @@
+```mermaid
+sequenceDiagram
+participant Web-browser
+participant Server
+actor User
+
+Web-browser->>server: GET www.studies.cs.helsinki.fi/exampleapp/notes
+activate Server
+Server-->>Web-browser: index.html (HTML document)
+deactivate server
+
+Web-browser->>server: GET www.studies.cs.helsinki.fi/exampleapp/main.css
+activate server
+server-->>Web-browser: main.css (the css file)
+deactivate server
+
+Web-browser->>server: GET www.studies.cs.helsinki.fi/exampleapp/main.js
+activate server
+server-->>Web-browser: main.js (the JavaScript file)
+deactivate server
+
+Note right of Web-browser: The Web browser starts executing the JavaScript code that fetches the JSON from the server
+
+Web-browser->>server: GET www.studies.cs.helsinki.fi/exampleapp/data.json
+activate server
+server-->>Web-browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
+deactivate server
+
+Note right of Web-browser: The browser executes the callback function that renders the notes.
+
+
+User->>Web-browser: The user types something in the input field of the form and click submit button.
+activate User
+
+Note right of Web-browser: Then the browser uses the callback function to push a new entry without reloading the entire page.
+
+Web-browser->>server: New entry: [{ "content": "New Entry#2", "date": "2025-06-12" }, ... ]
+activate server
+
+Note right of Web-browser: The browser receives the entire list of entries and executes the callback function that renders the notes.
+deactivate server
+```
