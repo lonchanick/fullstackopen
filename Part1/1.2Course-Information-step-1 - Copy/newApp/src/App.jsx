@@ -6,30 +6,18 @@ import Total from './Total'
 const App = () => {
   const header = 'Half Stack application development'; 
 
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercise: 10
-  }
-
-  const part2 = {
-    name: 'Using props to pass data',
-    exercise: 7
-  }
-
-  const part3 = {
-    name: 'State of a component',
-    exercise: 14
-  }
+  const parts = [
+    {courseName: 'Fundamentals of React', exercises: 10, key: 1},
+    {courseName: 'Using props to pass data', exercises: 7, key: 2},
+    {courseName: 'State of a component', exercises: 14, key: 3}]
 
   const total = 31
   
   return (
     <div>
-      <code>Wellcome to the exercise 1.3</code>
+      <code>Wellcome to the exercise 1.4</code>
       <Header header = {header}/> 
-      <Content param = {part1} />
-      <Content param = {part2} />
-      <Content param = {part3}/>
+      <Content thisShouldBeTheNameOfTheParamRecivedInTheComponent = {parts} /> 
       <Total total = {total}/>
     </div>
   )

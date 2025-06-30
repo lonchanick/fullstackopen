@@ -1,11 +1,10 @@
-import Part1 from './ContentComponents/part1'
-import Part2 from './ContentComponents/part2'
-import Part3 from './ContentComponents/part3'
-
-const Content = ({param}) =>{
-    return(
-        <p>{param.name} {param.exercise}</p>
-    )
+ 
+const Content = ({thisShouldBeTheNameOfTheParamRecivedInTheComponent}) => 
+{
+    return thisShouldBeTheNameOfTheParamRecivedInTheComponent
+    .map(el => <p key={el.key}>{el.courseName} {el.exercises}</p>);
 }
+
+ 
 
 export default Content;
