@@ -10,6 +10,7 @@ const App = () => {
   
   return (
     <div>
+      <h1>This is another header</h1>
       <Header header = {header}/> 
       <Content list />
       <Total total = {total}/>
