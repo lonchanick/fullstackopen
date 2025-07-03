@@ -1,33 +1,37 @@
 
 import {useState} from 'react'
-import Display from './Display';
-import Button from './Button';
+import History from './HistoryClicks';
+import Button from './Button'
 
 const App = () =>{
-  const [counter, setCounter] = useState(0);
-  console.log('rendering with counter value', counter)
-  
-  const increase = () => {
-    console.log('increasing, value before', counter)
-    setCounter(counter+1)
+  const [total, setTotal] = useState(0);
+  const [clicks, logClick] = useState([]);
+  const [leftCounter, setLeft] = useState(0);
+  const [rightCounter, setRight] = useState(0);
+
+  const updateLeft = () => {
+    logClick(clicks.concat('L'));
+    const total = leftCounter + 1;
+    setLeft(total);
+    setTotal(total+rightCounter);
   }
 
-  const decrease = () => {
-    console.log('decreasing, value before', counter)
-    setCounter(counter-1)
+  const updateRight = () => {
+    logClick(clicks.concat('R'));
+    const total = rightCounter + 1;
+    setRight(total);
+    setTotal(total+leftCounter);
   }
-
-  const resetCounter = ()=> {
-    console.log('resetting to zero, value before', counter)
-    setCounter(0)
-  } 
 
   return(
-    <> 
-    <Display counter = {counter} />
-    <Button onClick = {increase} text = 'Increase' /> 
-    <Button onClick = {resetCounter} text = 'Reset' /> 
-    <Button onClick = {decrease} text = 'decrease' /> 
+    <>
+      <h1>My App</h1>
+      <History clicks = {clicks}/>
+      <p>Total: {total}</p>
+      {leftCounter}<span>   </span>
+      <Button fnReference={updateLeft} text='left' /><span>__</span>
+      <Button fnReference={updateRight} text='right' /><span>__</span>
+      {rightCounter}
     </>
   );
 }
