@@ -1,9 +1,9 @@
 import {useState} from 'react'
 import Button from './Button'
 
-const SingleStatistic = ({text, value})=> <p>{text}: {value}</p>
+const SingleStatistic = ({text, value})=> <tr><td>{text}</td><td>{value}</td></tr>
 
-const Statistics = ({moreStatistics})=>{
+const Statistics = ({moreStatistics,good,neutral,bad})=>{
   const totalStatistics = moreStatistics.length;
   
   if(totalStatistics===0)
@@ -15,11 +15,17 @@ const Statistics = ({moreStatistics})=>{
     (moreStatistics.reduce((acc, num) => num>0 ? acc + num : acc , 0)/totalStatistics)*100;
   
   return(
-    <div>
+  <table>
+    <tbody>
+      <SingleStatistic text = 'Good' value = {good} />
+      <SingleStatistic text = 'Neutral' value = {neutral} />
+      <SingleStatistic text = 'Bad' value = {bad} />
       <SingleStatistic text = 'FeedBack' value = {totalStatistics} />
       <SingleStatistic text = 'Average' value = {getAverage()} />
       <SingleStatistic text = 'Positive' value = {getPositive()} />
-    </div>
+    </tbody>
+      
+  </table>
   )
 }
 
@@ -52,12 +58,8 @@ const App = () =>{
     <Button fnReference={()=>evHandSetGood(good +1)} text = 'Good'/>
     <Button fnReference={()=>evHandSetNeutral(neutral +1)} text = 'Neutral'/>
     <Button fnReference={()=>evHandSetBad(bad +1)} text = 'Bad'/>
-    <h2>Statistics</h2>
-    <p><span>Good: </span><span>{good}</span></p>
-    <p><span>Neutral: </span><span>{neutral}</span></p>
-    <p><span>Bad: </span><span>{bad}</span></p>
-    <code>More statistics:</code>
-    <Statistics moreStatistics = {moreStatistics} />
+    <h2>Statistics</h2> 
+    <Statistics moreStatistics = {moreStatistics} good ={good} neutral = {neutral} bad = {bad} />
     </>
   )
 }
