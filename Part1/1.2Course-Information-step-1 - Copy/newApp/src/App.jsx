@@ -12,6 +12,22 @@ const anecdotesList = [
     'The only way to go fast, is to go well.'
   ]
 
+const MostVoted = ({anecdotesVotes}) => {
+  let maxVal = {index: 0, val: 0};
+  for(const [key, val] of Object.entries(anecdotesVotes))
+  {
+    if(val > maxVal.val)
+      maxVal.index = key;
+      maxVal.val = val;
+  }
+  console.log(anecdotesVotes);
+  return (
+    <div>
+      <h1>Most Voted</h1>
+      <p>{anecdotesList[maxVal.index]}</p>
+    </div>
+  )
+}
 
 const App = () =>{
   const [buttonState, setButtonState] = useState(0);
@@ -39,6 +55,7 @@ const App = () =>{
     {showAnecdote(index)}<br></br>
     <Button fnReference={() =>  setButtonState(buttonState+1)} text = 'Show anecdote!'  />
     <Button fnReference={()=>handlerSetVote(index)} text = 'vote this one!'  />
+    <MostVoted anecdotesVotes = {anecdotesVotes} />
     </>
   )
 }
