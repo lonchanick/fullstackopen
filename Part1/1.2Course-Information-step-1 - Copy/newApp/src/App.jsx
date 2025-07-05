@@ -1,6 +1,8 @@
 import {useState} from 'react'
 import Button from './Button'
 
+const SingleStatistic = ({text, value})=> <p>{text}: {value}</p>
+
 const Statistics = ({moreStatistics})=>{
   const totalStatistics = moreStatistics.length;
   
@@ -14,9 +16,9 @@ const Statistics = ({moreStatistics})=>{
   
   return(
     <div>
-      <p><span>Total feedback:</span><span> {totalStatistics}</span></p>
-      <p><span>Average:</span><span> {getAverage()}</span></p>
-      <p><span>Average:</span><span> {getPositive()} %</span></p>
+      <SingleStatistic text = 'FeedBack' value = {totalStatistics} />
+      <SingleStatistic text = 'Average' value = {getAverage()} />
+      <SingleStatistic text = 'Positive' value = {getPositive()} />
     </div>
   )
 }
@@ -51,9 +53,9 @@ const App = () =>{
     <Button fnReference={()=>evHandSetNeutral(neutral +1)} text = 'Neutral'/>
     <Button fnReference={()=>evHandSetBad(bad +1)} text = 'Bad'/>
     <h2>Statistics</h2>
-    <p><span>Good:</span><span>{good}</span></p>
-    <p><span>Neutral:</span><span>{neutral}</span></p>
-    <p><span>Bad:</span><span>{bad}</span></p>
+    <p><span>Good: </span><span>{good}</span></p>
+    <p><span>Neutral: </span><span>{neutral}</span></p>
+    <p><span>Bad: </span><span>{bad}</span></p>
     <code>More statistics:</code>
     <Statistics moreStatistics = {moreStatistics} />
     </>
