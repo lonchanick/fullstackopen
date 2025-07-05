@@ -3,6 +3,10 @@ import Button from './Button'
 
 const Statistics = ({moreStatistics})=>{
   const totalStatistics = moreStatistics.length;
+  
+  if(totalStatistics===0)
+    return (<div>No feedback given!</div>)
+
   const getAverage = () => moreStatistics.reduce((sum,num)=>sum+num,0)/totalStatistics;
   
   const getPositive = () => 
