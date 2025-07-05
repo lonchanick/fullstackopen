@@ -11,7 +11,10 @@ const anecdotesList = [
 
 const Anecdotes = ({state}) => {
     if(state>0)
-        return <p>{anecdotesList[Math.floor(Math.random() * anecdotesList.length)]}</p>
+    {
+        const index = Math.floor(Math.random() * anecdotesList.length);
+        return [<p>{anecdotesList[index]}</p>, {name: 'Diego'}][0]
+    }
     
     return <p>Click button to show an anecdote!</p>
 }
