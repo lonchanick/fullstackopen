@@ -2,13 +2,30 @@ import {useState} from 'react'
 import Button from './Button'
  
 const App = () =>{
+  const [moreStatistics, setStatistics] = useState([]);
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const evHandSetGood = (val)=> setGood(val);
-  const evHandSetNeutral = (val)=> setNeutral(val);
-  const evHandSetBad = (val)=> setBad(val);
+  const evHandSetGood = (val)=> {
+    setGood(val);
+    setStatistics(moreStatistics.concat(1));
+  }
+  const evHandSetNeutral = (val)=> {
+    setNeutral(val);
+    setStatistics(moreStatistics.concat(0));
+
+  }
+  const evHandSetBad = (val)=> {
+    setBad(val);
+    setStatistics(moreStatistics.concat(-1));
+  }
+
+  const totalStatistics = moreStatistics.length;
+  const getAverage = () => moreStatistics.reduce((sum,num)=>sum+num,0)/totalStatistics;
+  
+  const getPositive = () => 
+    (moreStatistics.reduce((acc, num) => num>0 ? acc + num : acc , 0)/totalStatistics)*100;
 
   return(
     <>
@@ -20,7 +37,11 @@ const App = () =>{
     <h2>Statistics</h2>
     <p><span>Good:</span><span>{good}</span></p>
     <p><span>Neutral:</span><span>{neutral}</span></p>
-    <p><span>Bad:</span><span>{bad}</span></p> 
+    <p><span>Bad:</span><span>{bad}</span></p>
+    <code>More statistics:</code>
+    <p><span>Total feedback:</span><span> {moreStatistics.length}</span></p>
+    <p><span>Average:</span><span> {getAverage()}</span></p>
+    <p><span>Average:</span><span> {getPositive()} %</span></p>
     </>
   )
 }
