@@ -1,39 +1,22 @@
-
 import {useState} from 'react'
-import History from './HistoryClicks';
 import Button from './Button'
-
+ 
 const App = () =>{
-  const [total, setTotal] = useState(0);
-  const [clicks, logClick] = useState([]);
-  const [leftCounter, setLeft] = useState(0);
-  const [rightCounter, setRight] = useState(0);
+  const [val, setVal] = useState(0);
 
-  const updateLeft = () => {
-    logClick(clicks.concat('L'));
-    const total = leftCounter + 1;
-    setLeft(total);
-    setTotal(total+rightCounter);
-  }
+  const clickHandler = (num)=> setVal(num)
 
-  const updateRight = () => {
-    logClick(clicks.concat('R'));
-    const total = rightCounter + 1;
-    setRight(total);
-    setTotal(total+leftCounter);
-  }
-  // debugger
   return(
     <>
-      <h1>My App</h1>
-      <History clicks = {clicks}/>
-      <p>Total: {total}</p>
-      {leftCounter}<span>   </span>
-      <Button fnReference={updateLeft} text='left' /><span>__</span>
-      <Button fnReference={updateRight} text='right' /><span>__</span>
-      {rightCounter}
+    <p>{val}</p>
+    <Button fnReference = {()=> clickHandler(1000)} text = 'Set to 1.000' /><br></br>
+    {/* <button onClick = {()=>clickHandler(1000)} >Set to 1.000</button> */}
+    <Button fnReference = {()=> clickHandler(0)} text = 'Set to 0' /><br></br>
+    {/* <button onClick = {()=>clickHandler(0)} >Set to 0</button> */}
+    <Button fnReference = {()=> clickHandler(val+1)} text = 'Increment' /><br></br>
+    {/* <button onClick = {()=>clickHandler(val+1)} >Increment + 1</button> */}
     </>
-  );
+  )
 }
 
 export default App
