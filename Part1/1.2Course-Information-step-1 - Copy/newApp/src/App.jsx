@@ -22,7 +22,7 @@ const App = () =>{
     setRight(total);
     setTotal(total+leftCounter);
   }
-
+  // debugger
   return(
     <>
       <h1>My App</h1>
