@@ -17,7 +17,10 @@ const Part = (props) => (
   </p>
 )
 
-const Total = (props) => <p>Number of exercises {props.total}</p>
+const Total = ({course}) => {
+  const ex = course.map(el => el.exercises) 
+  return <strong>Total of {ex.reduce((acc,n)=> acc+n)} exercises.</strong>
+}
 
 const App = () => {
   const course = {
@@ -47,7 +50,12 @@ const App = () => {
     ]
   }
 
-  return <Course course={course} />
+  return (
+    <>
+      <Course course={course} />
+      <Total course={course.parts} />
+    </>
+  )
 }
 
 export default App
