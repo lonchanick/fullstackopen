@@ -33,4 +33,4 @@ const notes = [
   }
 ]
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App xnotes = {notes}/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<App xnotes = {notes}/>)
