@@ -70,7 +70,7 @@ const App = () => {
 
   return (
     <>
-      <span><code>exercise 2.4</code></span>
+      <span><code>exercise 2.5</code></span>
       {courses.map(c => <Course key={c.id} course={c} /> )} 
     </>
   )
