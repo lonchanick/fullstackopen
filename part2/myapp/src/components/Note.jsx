@@ -1,3 +1,9 @@
-const Note = ({note}) => <li>{note.content} {note.important?' TRUE':' FALSE'}</li>
+const Note = ({ note }) => {
+  return (
+    <li style={note.important ? { color: "#fae1dd" } : { color: "#d90429" }}>
+      {note.content.slice(0, 15)}
+    </li>
+  );
+};
 
-export default Note
+export default Note;
