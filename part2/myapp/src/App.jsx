@@ -1,39 +1,32 @@
-import Course from "./components/Course";
-import { useState } from "react";
-import Note from './components/Note'
-
-const Header = (props) => <h1>{props.course}</h1>;
-
-const Content = (props) => (
-  <div>
-    <Part part={props.parts[0]} />
-    <Part part={props.parts[1]} />
-    <Part part={props.parts[2]} />
-  </div>
-);
-
-const Part = (props) => (
-  <p>
-    {props.part.name} {props.part.exercises}
-  </p>
-);
+import { useState, useEffect } from 'react'
+import axios from 'axios' 
+import Note from './components/Note'  
 
 export const Total = ({ course }) => {
   const ex = course.map((el) => el.exercises);
   return <strong>Total of {ex.reduce((acc, n) => acc + n)} exercises.</strong>;
 };
 
-const App = (props) => {
+ 
+const App = () => {
   //states; a piece of state x 3
-  const [notes, setNotes] = useState(props.notes);
+  const [notes, setNotes] = useState([]);
   const [newNote, setNewnote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
 
-  const notesToShow = showAll 
-  ? notes
-  : notes.filter(note => note.important);
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+  }, [])
+  console.log('render', notes.length, 'notes')
 
-  console.log(notesToShow);
+  const notesToShow = showAll ? notes : notes.filter(note => note.important);
+
 
   const addNote = (event) => {
     event.preventDefault();
@@ -41,7 +34,6 @@ const App = (props) => {
     if(newNote === '') 
       return;
 
-    console.log("button clicked", event.target);
     const newNoteObj = {
       id: notes.length+1,
       content: newNote,
@@ -52,7 +44,6 @@ const App = (props) => {
   };
 
   const handlerNoteChange = (event) => {
-    console.log(event.target.value);
     setNewnote(event.target.value);
   };
  
@@ -65,8 +56,7 @@ const App = (props) => {
       <span>
       <h1>Notes App</h1>
       <button onClick={()=>setShowAll(!showAll)}>{showAll ? 'Important':'All'}</button>
-      </span>
-
+      </span> 
       {notesToShow.map(note => <Note key={note.id} note={note} />)}
       <form onSubmit={addNote}>
         <input value={newNote} onChange={handlerNoteChange} />
