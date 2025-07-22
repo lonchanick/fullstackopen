@@ -14,16 +14,28 @@ const App = () => {
   const [newNote, setNewnote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
 
-  useEffect(() => {
-    console.log('effect')
+  const toggleImportance = (id)=>
+  {
+    const note = notes.find(n => n.id === id); 
+    const changedNote = {...note, important: !note.important};
+
+    axios.put(`http://localhost:3001/notes/${id}`, changedNote)
+    .then((response)=>{
+      console.log(note);
+      console.log(changedNote);
+      setNotes(notes.map(n => n.id === id ? response.data : n))
+    })
+  }
+
+  const deleteNote = (id)=> axios.delete(`http://localhost:3001/notes/${id}`);
+
+  useEffect(() => { 
     axios
       .get('http://localhost:3001/notes')
-      .then(response => {
-        console.log('promise fulfilled')
+      .then(response => { 
         setNotes(response.data)
       })
-  }, [])
-  console.log('render', notes.length, 'notes')
+  }, []) 
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important);
 
@@ -35,12 +47,19 @@ const App = () => {
       return;
 
     const newNoteObj = {
-      id: notes.length+1,
+      //id: notes.length+1,
       content: newNote,
       important: Math.random() > 0.5
     }
-    setNotes(notes.concat(newNoteObj));
-    setNewnote('');
+
+    axios.post('http://localhost:3001/notes', newNoteObj)
+    .then(resp => {
+      console.log(resp)
+      setNotes(notes.concat(newNoteObj));
+      setNewnote('');
+    });
+
+    
   };
 
   const handlerNoteChange = (event) => {
@@ -57,7 +76,13 @@ const App = () => {
       <h1>Notes App</h1>
       <button onClick={()=>setShowAll(!showAll)}>{showAll ? 'Important':'All'}</button>
       </span> 
-      {notesToShow.map(note => <Note key={note.id} note={note} />)}
+
+      {notesToShow.map(note => <Note 
+      key={note.id} 
+      note={note} 
+      toggleImportance={toggleImportance} 
+      deleteNote={deleteNote}/>)}
+
       <form onSubmit={addNote}>
         <input value={newNote} onChange={handlerNoteChange} />
         
