@@ -1,31 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from 'axios'
 
 const App = () => {
-  const [person, setNewPerson] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [person, setNewPerson] = useState([]);
 
   const [newPersonInput, setNewPersonInput] = useState("");
   const [newNumberInput, setNewNumberInput] = useState("");
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState(""); 
+
+  const persons = response => {
+    axios.get('http://localhost:3001/persons')
+    .then(response => {
+      console.log(response.data)
+      setNewPerson(response.data)
+    })
+  }
+
+  useEffect(persons, []);
 
   const filteredPersons = person.filter((person) =>
     person.name.toLowerCase().startsWith(filter.toLowerCase())
   );
 
-  const onChangeNewPersonInput = (event) => {
-    // console.log(event.target.value);
+  const onChangeNewPersonInput = (event) => { 
     setNewPersonInput(event.target.value);
   };
-  const onChangeNewNumberInput = (event) => {
-    // console.log(event.target.value);
+  const onChangeNewNumberInput = (event) => { 
     setNewNumberInput(event.target.value);
   };
-  const onChangeFilter = (event) => {
-    console.log(event.target.value);
+  const onChangeFilter = (event) => { 
     setFilter(event.target.value);
   };
 
@@ -75,8 +78,7 @@ const SearchComponent = ({ filter, onChangeFilter }) => {
   );
 };
 
-const NewPersonForm = (props) => {
-  // console.log(props)
+const NewPersonForm = (props) => { 
   return (
     <form onSubmit={props.onSubmitForm}>
       Name:{" "}
