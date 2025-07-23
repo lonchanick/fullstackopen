@@ -1,44 +1,23 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios' 
-import Note from './components/Note'  
+import { useState, useEffect } from 'react' 
+import Note from './components/Note'
+import noteService  from './services/notes'
 
 export const Total = ({ course }) => {
   const ex = course.map((el) => el.exercises);
   return <strong>Total of {ex.reduce((acc, n) => acc + n)} exercises.</strong>;
 };
 
- 
 const App = () => {
   //states; a piece of state x 3
   const [notes, setNotes] = useState([]);
   const [newNote, setNewnote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
-
-  const toggleImportance = (id)=>
-  {
-    const note = notes.find(n => n.id === id); 
-    const changedNote = {...note, important: !note.important};
-
-    axios.put(`http://localhost:3001/notes/${id}`, changedNote)
-    .then((response)=>{
-      console.log(note);
-      console.log(changedNote);
-      setNotes(notes.map(n => n.id === id ? response.data : n))
-    })
-  }
-
-  const deleteNote = (id)=> axios.delete(`http://localhost:3001/notes/${id}`);
-
-  useEffect(() => { 
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => { 
-        setNotes(response.data)
-      })
-  }, []) 
-
-  const notesToShow = showAll ? notes : notes.filter(note => note.important);
-
+  
+  useEffect(() => {  
+      noteService.getAll().then(response => setNotes(response));
+    }, []) 
+  
+  const notesToShow = showAll ? notes : notes.filter(note => note.important); 
 
   const addNote = (event) => {
     event.preventDefault();
@@ -52,20 +31,37 @@ const App = () => {
       important: Math.random() > 0.5
     }
 
-    axios.post('http://localhost:3001/notes', newNoteObj)
-    .then(resp => {
-      console.log(resp)
-      setNotes(notes.concat(newNoteObj));
+    noteService.create(newNoteObj)
+    .then(resp => { 
+      setNotes(notes.concat(resp));
       setNewnote('');
     });
+  };
 
-    
+  const toggleImportance = (id)=>
+  {
+    const note = notes.find(n => n.id === id); 
+    const changedNote = {...note, important: !note.important};
+
+    noteService.update(id,changedNote)
+    .then((data)=>{
+      setNotes(notes.map(n => n.id === id ? data : n))
+    })
+  }
+
+  const deleteNote = (id)=> {
+    noteService.remove(id)
+    .then(resp => {
+      //nota: no se re-renderiza la pantalla
+      console.log(resp);
+      const newArray = notes.filter(n => n.id !== resp)
+      setNotes(newArray);
+    }); 
   };
 
   const handlerNoteChange = (event) => {
     setNewnote(event.target.value);
   };
- 
 
   return (
     <>
