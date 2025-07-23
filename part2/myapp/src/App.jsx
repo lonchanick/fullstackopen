@@ -1,26 +1,31 @@
-import { useState, useEffect } from "react";
-import axios from 'axios'
+import { useState, useEffect } from "react"; 
+import phoneService from './services/phone'
 
 const App = () => {
   const [person, setNewPerson] = useState([]);
-
   const [newPersonInput, setNewPersonInput] = useState("");
   const [newNumberInput, setNewNumberInput] = useState("");
   const [filter, setFilter] = useState(""); 
 
-  const persons = response => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => {
-      console.log(response.data)
-      setNewPerson(response.data)
+  const persons = () => {
+    const notARecord = { 
+      "name": "Not a record", 
+      "number": "000000000",
+      "id": "3222"
+    }
+
+    phoneService.getAll()
+    .then(response => { 
+      setNewPerson(response.concat(notARecord))
     })
   }
 
   useEffect(persons, []);
 
-  const filteredPersons = person.filter((person) =>
-    person.name.toLowerCase().startsWith(filter.toLowerCase())
-  );
+  const filteredPersons = person.filter((person) =>{
+    return person.name.toLowerCase()
+    .startsWith(filter.toLowerCase())
+  });
 
   const onChangeNewPersonInput = (event) => { 
     setNewPersonInput(event.target.value);
@@ -35,20 +40,34 @@ const App = () => {
   const onSubmitForm = (event) => {
     event.preventDefault();
     const alreadyExist = person.find((p) => p.name === newPersonInput);
-
+    
     if (alreadyExist) {
       alert(`${newPersonInput} already exist!`);
       return;
     }
+
     const newPerson = {
-      id: person.length + 1,
+      //id: person.length + 1,
       name: newPersonInput,
       number: newNumberInput,
     };
-    setNewPerson(person.concat(newPerson));
-    setNewPersonInput("");
-    setNewNumberInput("");
+
+    phoneService.push(newPerson)
+    .then(response => {
+      console.log('id: ',response.id);
+      newPerson.id = response.id;
+      setNewPerson(person.concat(newPerson));
+      setNewPersonInput("");
+      setNewNumberInput("");
+    });
+
+    
   };
+
+  const remove = (id)=>{
+    phoneService.remove(id)
+    .then(() => setNewPerson(person.filter(per => per.id !== id)))
+  }
 
   return (
     <>
@@ -65,7 +84,7 @@ const App = () => {
       ></NewPersonForm>
 
       <h2>Numbers</h2>
-      <RenderContacts filteredPersons = {filteredPersons}/>
+      <RenderContacts filteredPersons = {filteredPersons} remove={remove}/>
     </>
   );
 };
@@ -101,7 +120,8 @@ const NewPersonForm = (props) => {
 const RenderContacts = (props) => {
   return props.filteredPersons.map((person) => (
     <p key={person.id}>
-      {person.name} {person.number}
+      {person.name} {person.number}  
+      <button onClick={()=>props.remove(person.id)}>Delete</button>
     </p>
   ));
 };
