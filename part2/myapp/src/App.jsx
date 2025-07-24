@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import Note from "./components/Note";
 import noteService from "./services/notes";
 
+import './index.css'
+import ErrNotification from './components/ErrNotification'
+import Footer from './components/Footer'
+
 export const Total = ({ course }) => {
   const ex = course.map((el) => el.exercises);
   return <strong>Total of {ex.reduce((acc, n) => acc + n)} exercises.</strong>;
@@ -12,6 +16,7 @@ const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewnote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('some error here');
 
   useEffect(() => {
     const nonExistingOb = {
@@ -51,8 +56,11 @@ const App = () => {
     .then((data) => {
       setNotes(notes.map((n) => (n.id === id ? data : n)));
     })
-    .catch(error => {
-      alert(`something went wrong! ${error}`)
+    .catch(() => {
+      setErrorMessage(`${note.content} was already removed from server`);
+      setTimeout(()=>{
+        setErrorMessage(null)
+      }, 5000)
       setNotes(notes.filter(n => n.id !== id))
     });
   };
@@ -74,6 +82,7 @@ const App = () => {
     <>
       <span>
         <code>LAB</code>
+        <ErrNotification message ={errorMessage}></ErrNotification>
       </span>
       <span>
         <h1>Notes App</h1>
@@ -96,6 +105,7 @@ const App = () => {
 
         <button type="submit">submit</button>
       </form>
+      <Footer />
     </>
   );
 };
