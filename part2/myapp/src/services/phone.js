@@ -12,7 +12,7 @@ const remove = (id) =>{
     return axios.delete(`${baseUrl}/${id}`)
     .then(response => response.data)
     .catch(err => {
-        return alert('obj does not exist!')
+        return alert(`obj does not exist! ${err.data}`)
     })
 }
 
