@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"; 
-import phoneService from './services/phone'
+import phoneService from './services/phone' 
 
 const App = () => {
   const [person, setNewPerson] = useState([]);
@@ -8,15 +8,9 @@ const App = () => {
   const [filter, setFilter] = useState(""); 
 
   const persons = () => {
-    const notARecord = { 
-      "name": "Not a record", 
-      "number": "000000000",
-      "id": "3222"
-    }
-
     phoneService.getAll()
     .then(response => { 
-      setNewPerson(response.concat(notARecord))
+      setNewPerson(response)
     })
   }
 
@@ -37,13 +31,26 @@ const App = () => {
     setFilter(event.target.value);
   };
 
+  //on creating a new record
   const onSubmitForm = (event) => {
     event.preventDefault();
     const alreadyExist = person.find((p) => p.name === newPersonInput);
     
     if (alreadyExist) {
-      alert(`${newPersonInput} already exist!`);
-      return;
+      const confirmResult = confirm(`${newPersonInput} already exist, replace the old number with the new one?`);
+      if(confirmResult)
+      {
+        const newPerson = {...alreadyExist, number: newNumberInput};
+        console.log(newPerson);
+        phoneService.update(alreadyExist.id, newPerson)
+        .then(response => { 
+          console.log(response.data);
+          setNewPerson(person.map(per => per.id !== alreadyExist.id ? per : newPerson));
+          setNewPersonInput("");
+          setNewNumberInput("");
+        })
+        return;
+      } 
     }
 
     const newPerson = {
@@ -53,15 +60,12 @@ const App = () => {
     };
 
     phoneService.push(newPerson)
-    .then(response => {
-      console.log('id: ',response.id);
+    .then(response => { 
       newPerson.id = response.id;
       setNewPerson(person.concat(newPerson));
       setNewPersonInput("");
       setNewNumberInput("");
     });
-
-    
   };
 
   const remove = (id)=>{

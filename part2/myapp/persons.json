@@ -1,9 +1,29 @@
 {
   "persons": [
     {
+      "name": "Arto Hellas",
+      "number": "040-123456",
+      "id": "1"
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": "2"
+    },
+    {
+      "name": "Linus Torvalds",
+      "number": "02-77-112233",
+      "id": "6"
+    },
+    {
       "name": "Martin Fowler",
       "number": "16-00-121314",
       "id": "20"
+    },
+    {
+      "name": "diego",
+      "number": "8888888888888",
+      "id": "6c23"
     }
   ]
 }

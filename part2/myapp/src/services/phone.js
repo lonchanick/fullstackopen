@@ -11,6 +11,11 @@ const push = (obj) =>{
 const remove = (id) =>{ 
     return axios.delete(`${baseUrl}/${id}`)
     .then(response => response.data)
+    .catch(err => {
+        return alert('obj does not exist!')
+    })
 }
 
-export default {getAll, push, remove}
+const update = (id, obj) => axios.put(`${baseUrl}/${id}`, obj);
+
+export default {getAll, push, remove, update}
