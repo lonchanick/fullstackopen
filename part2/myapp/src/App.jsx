@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react"; 
-import phoneService from './services/phone' 
+import phoneService from './services/phone'
+import Notifications from "./components/Notifications";
+import './index.css'
+
+let typeOfNotification = "";
 
 const App = () => {
   const [person, setNewPerson] = useState([]);
   const [newPersonInput, setNewPersonInput] = useState("");
   const [newNumberInput, setNewNumberInput] = useState("");
-  const [filter, setFilter] = useState(""); 
+  const [filter, setFilter] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(""); 
 
   const persons = () => {
     phoneService.getAll()
@@ -40,14 +45,25 @@ const App = () => {
       const confirmResult = confirm(`${newPersonInput} already exist, replace the old number with the new one?`);
       if(confirmResult)
       {
-        const newPerson = {...alreadyExist, number: newNumberInput};
-        console.log(newPerson);
+        const newPerson = {...alreadyExist, number: newNumberInput}; 
         phoneService.update(alreadyExist.id, newPerson)
-        .then(response => { 
-          console.log(response.data);
+        .then(() => {  
           setNewPerson(person.map(per => per.id !== alreadyExist.id ? per : newPerson));
           setNewPersonInput("");
           setNewNumberInput("");
+          //notification
+          typeOfNotification="succeed";
+          setNotificationMessage("Succefully edited!");
+          setTimeout(()=>{
+          setNotificationMessage("")
+          }, 3000)
+        })
+        .catch(() => {
+          typeOfNotification="error";
+          setNotificationMessage(`${newPersonInput} has been already removed from server.`);
+          setTimeout(()=>{
+          setNotificationMessage("")
+          }, 3000)
         })
         return;
       } 
@@ -65,16 +81,37 @@ const App = () => {
       setNewPerson(person.concat(newPerson));
       setNewPersonInput("");
       setNewNumberInput("");
+      //notification
+      typeOfNotification="succeed";
+      setNotificationMessage("Succefully Added!");
+      setTimeout(()=>{
+      setNotificationMessage("")
+      }, 3000)
     });
   };
 
   const remove = (id)=>{
     phoneService.remove(id)
-    .then(() => setNewPerson(person.filter(per => per.id !== id)))
+    .then(() => {
+      //notification
+      typeOfNotification="succeed";
+      setNotificationMessage('Successfully removed!')
+      setTimeout(()=>{
+        setNotificationMessage("")
+      }, 3000)
+
+      setNewPerson(person.filter(per => per.id !== id));
+    })
   }
 
   return (
     <>
+      {notificationMessage && 
+      <Notifications 
+      message={notificationMessage}
+      typeOfNotification={typeOfNotification}
+      />}
+
       <h2>PhoneBook</h2>
       <SearchComponent filter={filter} onChangeFilter={onChangeFilter} />
 
