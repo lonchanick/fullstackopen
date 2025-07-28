@@ -18,7 +18,7 @@ const App = () => {
   };
 
   useEffect(() => {
-    console.log('current value of SearchValue: ', searchValue);
+    console.log('current value of SearchValue: ', currecy);
     if(currecy)
     {
       axios.get(`https://open.er-api.com/v6/latest/${currecy}`)
