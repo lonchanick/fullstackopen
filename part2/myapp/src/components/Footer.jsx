@@ -6,7 +6,7 @@ const Footer =()=>{
     }
     return (
         <div style={styles}>
-            <p>Note app, Department of Computer Science, University of Helsinki 2025</p>
+            <p>Exercise 2.16 - 2.18 , Department of Computer Science, University of Helsinki 2025</p>
         </div>
     )
 }

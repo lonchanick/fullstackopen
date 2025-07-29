@@ -1,44 +1,41 @@
-//do it again!
-import { useState, useEffect } from "react";
-
-import "./index.css";
-import Footer from "./components/Footer";
+import {useState, useEffect} from 'react'
+import Footer from './components/Footer'
 import axios from 'axios'
+import CountryInfo from './components/CountryInfo';
+
+ 
 
 const App = () => {
-  const [searchValue, setSerchValue] = useState("");
-  const [currecy, setCurrency] = useState(null);
-  const [currencyRateSet, setCurrencyRate] = useState([{}]);
+  const [countryField, setCountryField] = useState("");
+  const [countries, setCountries] = useState([]);
 
-  const serachValueHandler = (e) => setSerchValue(e.target.value);
 
-  const onSubmitForm = (e) => {
-    e.preventDefault();
-    setCurrency(searchValue);
-  };
+  const onChCountryField = (e)=> setCountryField(e.target.value);
 
-  useEffect(() => {
-    console.log('current value of SearchValue: ', currecy);
-    if(currecy)
-    {
-      axios.get(`https://open.er-api.com/v6/latest/${currecy}`)
-      .then(response =>{
-        setCurrencyRate(response.data.rates)
-      });
-    }
+  const filteredCountry = countryField ? countries
+  .filter(c => c.name.common.toLowerCase().startsWith(countryField.toLowerCase()))
+  : [];
 
-  }, [currecy]);
+  // console.log("filtered ctr: ",filteredCountry)
+
+  useEffect(()=>{
+    axios.get(`https://studies.cs.helsinki.fi/restcountries/api/all`)
+    .then(response => {
+      setCountries(response.data); 
+    })
+  }, [])
+
+  if(countries.length === 0) return (<p>Loading Countries!</p>);
 
   return (
     <>
-      <h1>Currency Exchange Rate</h1>
-      <form onSubmit={onSubmitForm}>
-        Currency: <input value={searchValue} onChange={serachValueHandler} />
-        <button type="submit">Submit</button>
+      <h1>Country Filterer!</h1>
+      <form>
+        Country: <input value={countryField} onChange={onChCountryField} /> 
       </form>
-      <pre>
-        {JSON.stringify(currencyRateSet, null, 2)}
-      </pre>
+      <div>
+        <CountryInfo country = {filteredCountry} />
+      </div> 
       <Footer />
     </>
   );
