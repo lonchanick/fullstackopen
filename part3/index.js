@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const persons = [
+let persons = [
   {
     id: "1",
     name: "Arto Hellas",
@@ -56,6 +56,14 @@ app.get("/api/persons/:id", (request, response) => {
 
   return response.status(404).json({ error: "wrong ID/not found" });
 });
+
+//exercise 3.4: Implement functionality that makes it possible to delete a single phonebook entry 
+// by making an HTTP DELETE request to the unique URL of that phonebook entry.
+app.delete('/api/persons/:id',(request,response)=>{
+    const id = request.params.id;
+    persons = persons.filter(p => p.id !== id);
+    return response.status(200).json(persons);
+})
 
 const PORT = 3001;
 app.listen(PORT, () => {
