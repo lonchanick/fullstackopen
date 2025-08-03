@@ -47,6 +47,16 @@ app.get("/api/info", (request, response) => {
   response.status(200).json(info);
 });
 
+//get person by id: if id is null then response will be 404: not found
+app.get("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  const person = persons.find((p) => p.id === id);
+  
+  if (person)  return response.status(200).json(person); 
+
+  return response.status(404).json({ error: "wrong ID/not found" });
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}`);
