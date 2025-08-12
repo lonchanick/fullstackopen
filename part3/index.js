@@ -1,6 +1,13 @@
 const express = require("express");
+const morgan = require("morgan");
+
 const app = express();
 app.use(express.json());
+// app.use(morgan('tiny'));
+
+//Custom Morgan format
+morgan.token('body', (req) => JSON.stringify(req.body)); // Log request body
+app.use(morgan(':method :url :status :response-time ms :body'));
 
 let persons = [
   {
@@ -24,6 +31,17 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
+
+//middlewares
+// const requestLogger = (request,response,next) => {
+//   console.log("Request Method: ",request.method);
+//   console.log("Request Path: ",request.path);
+//   console.log("Request Body: ",request.body);
+//   next();
+// }
+// app.use(requestLogger);
+
+
 
 //home page
 app.get("/api", (request, response) => {
@@ -83,6 +101,14 @@ app.post('/api/persons',(request, response)=>{
     persons.push(el);
     response.status(200).json({"server says: ":"New object added", "object":el})
 })
+
+
+//unknownEndPoint
+const unknownEndpoint = (request, response, next) => {
+  response.status(400).send({Error : "UnknownEndpoint"});
+  next();
+}
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT, () => {
