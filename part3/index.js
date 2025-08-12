@@ -69,7 +69,17 @@ app.delete('/api/persons/:id',(request,response)=>{
 //exercise 3.5
 app.post('/api/persons',(request, response)=>{
     const id = Math.floor(Math.random()* 999);
-    const el = {...request.body, id: id.toString()};
+    
+    const el = request.body.id 
+    ? {...request.body}
+    : {...request.body, id: id.toString()}
+
+    if(!el.name || !el.number)
+      return response.status(400).json({"error:":"Missing required fields: name and number are required"})
+
+    if(persons.find(p => p.id === el.id))
+      return response.status(400).json({"error:":"Id already exist"})
+
     persons.push(el);
     response.status(200).json({"server says: ":"New object added", "object":el})
 })
