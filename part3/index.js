@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -63,6 +64,14 @@ app.delete('/api/persons/:id',(request,response)=>{
     const id = request.params.id;
     persons = persons.filter(p => p.id !== id);
     return response.status(200).json(persons);
+})
+
+//exercise 3.5
+app.post('/api/persons',(request, response)=>{
+    const id = Math.floor(Math.random()* 999);
+    const el = {...request.body, id: id.toString()};
+    persons.push(el);
+    response.status(200).json({"server says: ":"New object added", "object":el})
 })
 
 const PORT = 3001;
