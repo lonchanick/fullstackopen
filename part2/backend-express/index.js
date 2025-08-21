@@ -25,6 +25,7 @@ let notes = [
 
   //get all notes
 app.get('/api/notes', (req, resp)=>{
+    console.log('current notes:',notes);
     resp.status(200).json(notes);
 })
 

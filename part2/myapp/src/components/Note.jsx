@@ -1,4 +1,4 @@
-const Note = ({ note,toggleImportance, deleteNote}) => {
+const Note = ({ note,toggleImportance, deleteNote}) => { 
   const buttonText = note.important ? "Make not important" : "Make important"
   return (
     <li className="note">

@@ -18,15 +18,10 @@ const App = () => {
   const [showAll, setShowAll] = useState(true);
   const [errorMessage, setErrorMessage] = useState('some error here');
 
-  useEffect(() => {
-    const nonExistingOb = {
-      "id": "903a007",
-      "content": "Non Existing Obj",
-      "important": false
-    }
+  useEffect(() => { 
     noteService
     .getAll()
-    .then((response) => setNotes(response.concat(nonExistingOb)));
+    .then((response) => setNotes(response));
   }, []);
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important);
@@ -36,14 +31,13 @@ const App = () => {
 
     if (newNote === "") return;
 
-    const newNoteObj = {
-      //id: notes.length+1,
+    const newNoteObj = { 
       content: newNote,
       important: Math.random() > 0.5,
     };
 
     noteService.create(newNoteObj).then((resp) => {
-      setNotes(notes.concat(resp));
+      setNotes(resp);
       setNewnote("");
     });
   };
@@ -68,7 +62,7 @@ const App = () => {
   const deleteNote = (id) => {
     noteService.remove(id).then((resp) => {
       //nota: no se re-renderiza la pantalla
-      console.log(resp);
+      //console.log(resp);
       const newArray = notes.filter((n) => n.id !== resp);
       setNotes(newArray);
     });
