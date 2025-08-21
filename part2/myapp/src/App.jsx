@@ -60,11 +60,9 @@ const App = () => {
   };
 
   const deleteNote = (id) => {
-    noteService.remove(id).then((resp) => {
-      //nota: no se re-renderiza la pantalla
-      //console.log(resp);
-      const newArray = notes.filter((n) => n.id !== resp);
-      setNotes(newArray);
+    noteService.remove(id)
+    .then((resp) => {
+      setNotes(resp);
     });
   };
 

@@ -44,6 +44,7 @@ app.post('/api/notes',(req, resp)=>{
     const newNote = req.body;
     newNote.id = (notes.length + 1).toString();
     notes = notes.concat(newNote);
+    console.log('current notes:',notes);
     resp.status(200).json(notes);
 })
 
@@ -51,12 +52,8 @@ app.post('/api/notes',(req, resp)=>{
 app.delete('/api/notes/:id', (req,resp)=>{
     const id = req.params.id;
 
-    if(!id) return resp.status(400).json({'response':'Bad request dude!'})
-    
-    console.log('notes: ', notes);
-    const el = notes.find(n => n.id === id);
-    console.log('el: ', el);
-
+    if(!id) return resp.status(400).json({'response':'Bad request dude!'}) 
+    const el = notes.find(n => n.id === id); 
 
     if(!el) return resp.status(404).json({response: "resource Not found"});
 
