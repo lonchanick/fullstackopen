@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const phoneBook = require('./Models/phonebook');
 
 const app = express();
 app.use(express.json()); 
@@ -32,7 +33,9 @@ let persons = [
 
 //home page
 app.get("/api", (request, response) => {
-  response.json({ "Home content": "This is the Home Page" });
+  phoneBook.find({}).then(result => {
+    response.json(result);
+  }) 
 });
 
 //get persons
