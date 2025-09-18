@@ -1,6 +1,6 @@
 const express = require("express");
-const morgan = require("morgan");
-const phoneBook = require('./Models/phonebook');
+const morgan = require("morgan"); 
+const Phonebook = require("./Models/phonebook");
 
 const app = express();
 app.use(express.json()); 
@@ -33,10 +33,21 @@ let persons = [
 
 //home page
 app.get("/api", (request, response) => {
-  phoneBook.find({}).then(result => {
+  Phonebook.find({}).then(result => {
     response.json(result);
   }) 
 });
+//***********************CURRENT*******************************/
+//get request to create a new record, working.
+app.get('/api/create', (request, response)=>{
+  const newPhonebook = new Phonebook({name:"Test name", number: "Test number"});
+  newPhonebook.save().then(()=>{
+    response.json({response: "succefully created"});
+  });
+  // const newNote = new Note( {content: body.content, important: body.important || false});
+});
+//***********************CURRENT*******************************/
+
 
 //get persons
 app.get("/api/persons", (request, response) => {
@@ -92,7 +103,7 @@ app.post('/api/persons',(request, response)=>{
     response.status(200).json({"server says: ":"New object added", "object":el})
 })
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}`);
+  console.log(`Backend for note sterted on port ${PORT}!`);
 });
