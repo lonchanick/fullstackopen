@@ -1,12 +1,18 @@
 const express = require("express");
-const morgan = require("morgan"); 
-const Phonebook = require("./Models/phonebook");
+const morgan = require("morgan");
+const phonebook = require("./Models/phonebook");
 
 const app = express();
-app.use(express.json()); 
+app.use(express.json());
 
-morgan.token('req-body', (req) =>  req.method === 'POST' ? JSON.stringify(req.body) : ''); 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req-body'));
+morgan.token("req-body", (req) =>
+  req.method === "POST" ? JSON.stringify(req.body) : ""
+);
+app.use(
+  morgan(
+    ":method :url :status :res[content-length] - :response-time ms :req-body"
+  )
+);
 
 let persons = [
   {
@@ -33,25 +39,29 @@ let persons = [
 
 //home page
 app.get("/api", (request, response) => {
-  Phonebook.find({}).then(result => {
-    response.json(result);
-  }) 
+  response.send("<h1>Home Page</h1>");
 });
 //***********************CURRENT*******************************/
 //get request to create a new record, working.
-app.get('/api/create', (request, response)=>{
-  const newPhonebook = new Phonebook({name:"Test name", number: "Test number"});
-  newPhonebook.save().then(()=>{
-    response.json({response: "succefully created"});
-  });
-  // const newNote = new Note( {content: body.content, important: body.important || false});
-});
+// app.get('/api/createAll', (request, response)=>{
+//   const family = [
+//     {name: "Dayana Intriago", number: "0000000001"},
+//     {name: "Diego Arroyo", number: "0000000002"},
+//     {name: "Agustin Arroyo", number: "0000000003"}]
+
+//   // const newPhonebook = new Phonebook(family);
+//   Phonebook.insertMany(family)
+//   .then(()=>{
+//     response.json({response: "Mocking data"});
+//   });
+// });
 //***********************CURRENT*******************************/
 
-
 //get persons
-app.get("/api/persons", (request, response) => {
-  response.status(200).json(persons);
+app.get("/api/contacts", (request, response) => {
+  phonebook.find({}).then((contacts) => {
+    response.json(contacts);
+  });
 });
 
 //get info
@@ -63,45 +73,22 @@ app.get("/api/info", (request, response) => {
     month: "long", // e.g., August
     day: "numeric",
   });
-  const info = `${formatted} --- Phone Book has info for ${persons.length} people.`;
-  response.status(200).json(info);
+
+  const contactsLength = phonebook.find({}).then((contacts) => {
+    const info = `${formatted} --- Phone Book has info for ${contacts.length} people.`;
+    response.status(200).json(info);
+  });
 });
 
-//get person by id: if id is null then response will be 404: not found
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = persons.find((p) => p.id === id);
-  
-  if (person)  return response.status(200).json(person); 
-
-  return response.status(404).json({ error: "wrong ID/not found" });
+app.get("/api/contact/:id", (request, response) => {
+  const id2 = request.params.id;
+  phonebook.findById(id2)
+  .then(contact =>{
+    response.json(contact)
+  })
+ 
 });
 
-//exercise 3.4: Implement functionality that makes it possible to delete a single phonebook entry 
-// by making an HTTP DELETE request to the unique URL of that phonebook entry.
-app.delete('/api/persons/:id',(request,response)=>{
-    const id = request.params.id;
-    persons = persons.filter(p => p.id !== id);
-    return response.status(200).json(persons);
-})
-
-//exercise 3.5
-app.post('/api/persons',(request, response)=>{
-    const id = Math.floor(Math.random()* 999);
-    
-    const el = request.body.id 
-    ? {...request.body}
-    : {...request.body, id: id.toString()}
-
-    if(!el.name || !el.number)
-      return response.status(400).json({"error:":"Missing required fields: name and number are required"})
-
-    if(persons.find(p => p.id === el.id))
-      return response.status(400).json({"error:":"Id already exist"})
-
-    persons.push(el);
-    response.status(200).json({"server says: ":"New object added", "object":el})
-})
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
