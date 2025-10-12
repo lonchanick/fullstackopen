@@ -18,6 +18,7 @@ const update = (id, newObject) => {
 }
 
 const remove = (id) => {
+    console.log("id from service:",id);
     const request = axios.delete(`${baseUrl}/${id}`);
     return request.then(response => response.data);
 }

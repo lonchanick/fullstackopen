@@ -4,7 +4,7 @@ const Note = ({ note,toggleImportance, deleteNote}) => {
     <li className="note" >
       {note.content.slice(0, 15)}
       <button onClick={()=> toggleImportance(note._id)}>{buttonText}</button>
-      <button onClick={()=> deleteNote(note._id)}>Delete</button>
+      <button onClick={()=> deleteNote(note.id)}>Delete</button>
     </li>
   );
 };
