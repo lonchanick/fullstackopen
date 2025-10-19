@@ -1,7 +1,7 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/api/contacts';
+const baseUrl = 'http://localhost:3001/api/contact';
 
-const getAll = () => axios.get(baseUrl).then(response => response.data)
+const getAll = () => axios.get(baseUrl).then(response => response.data);
 
 const push = (obj) =>{ 
     return axios.post(baseUrl,obj)
@@ -12,10 +12,11 @@ const remove = (id) =>{
     return axios.delete(`${baseUrl}/${id}`)
     .then(response => response.data)
     .catch(err => {
-        return alert(`obj does not exist! ${err.data}`)
+        return alert(`obj does not exist! ${err.data}`);
     })
 }
 
-const update = (id, obj) => axios.put(`${baseUrl}/${id}`, obj);
+const update = (id, obj) => axios.put(`${baseUrl}/${id}`, obj)
+.then(response => response.data);
 
 export default {getAll, push, remove, update}

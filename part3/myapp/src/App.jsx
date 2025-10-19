@@ -47,7 +47,8 @@ const App = () => {
       {
         const newPerson = {...alreadyExist, number: newNumberInput}; 
         phoneService.update(alreadyExist.id, newPerson)
-        .then(() => {  
+        .then((response) => {
+          console.log("updated object: ",response);
           setNewPerson(person.map(per => per.id !== alreadyExist.id ? per : newPerson));
           setNewPersonInput("");
           setNewNumberInput("");
@@ -93,7 +94,7 @@ const App = () => {
   const remove = (id)=>{
     phoneService.remove(id)
     .then(() => {
-      //notification
+      // notification
       typeOfNotification="succeed";
       setNotificationMessage('Successfully removed!')
       setTimeout(()=>{
@@ -124,7 +125,7 @@ const App = () => {
         onChangeNewNumberInput={onChangeNewNumberInput}
       ></NewPersonForm>
 
-      <h2>Numbers</h2>
+      <h2>Contacts</h2>
       <RenderContacts filteredPersons = {filteredPersons} remove={remove}/>
     </>
   );
