@@ -1,0 +1,26 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "fullstack course, chapter#4 excercises 4.1 - 4.2",
+  "homepage": "https://github.com/lonchanick/fullstackopen#readme",
+  "bugs": {
+    "url": "https://github.com/lonchanick/fullstackopen/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lonchanick/fullstackopen.git"
+  },
+  "license": "ISC",
+  "author": "Lonchanick",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.2"
+  }
+}
