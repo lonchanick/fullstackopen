@@ -10,10 +10,21 @@ const api = supertest(app);
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  let noteObject = new Note(helper.initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(helper.initialNotes[1]);
-  await noteObject.save();
+  //toda la explicacion esta aqui: https://fullstackopen.com/en/part4/testing_the_backend#optimizing-the-before-each-function
+  
+  //esto es un array de objetos tipo Note que usa el modelo de mongoDB
+  //const mongoNotesArray = helper.initialNotes.map(note => new Note(note));
+  
+  //esto es un array de promesas, el proceso guardado de las notas que se ejecutara en la siguiente linea 
+  //const NotesArrayPromises = mongoNotesArray.map(note => note.save());
+  
+  //esto ejecuta todas las promesas que se pasen como parametro. en caso de ser necesario
+  //un orden espesifico se usaria un for of
+  //await Promise.all(NotesArrayPromises);
+
+  //todo esto puede skipearse usando el metodo de mongodb:
+  await Note.insertMany(helper.initialNotes);
+   
 });
 
 test("notes are returned as json", async () => {
