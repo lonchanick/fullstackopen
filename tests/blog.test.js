@@ -43,8 +43,6 @@ test("verifies that making an HTTP POST request to the /api/blogs URL successful
     likes: 22,
   };
 
-  console.log(newBlogForTesting);
-
   const currentAmountOfBlogs = (await api.get('/api/blogs')).body.length;
 
   const savingNewBlogForTesting = await api.post("/api/blogs")
@@ -53,8 +51,8 @@ test("verifies that making an HTTP POST request to the /api/blogs URL successful
 
   const AfterCurrentAmountOfBlogs = (await api.get('/api/blogs')).body.length;
 
-  console.log('current amount of blogs', currentAmountOfBlogs);
-  console.log('after amount of blogs', AfterCurrentAmountOfBlogs);
+  console.log('current amount of blogs: ', currentAmountOfBlogs);
+  console.log('after amount of blogs: ', AfterCurrentAmountOfBlogs);
 
   const listOfBlogsAfterSaving = (await api.get('/api/blogs')).body.map(b => b.title);
   console.log(listOfBlogsAfterSaving);
@@ -62,62 +60,7 @@ test("verifies that making an HTTP POST request to the /api/blogs URL successful
   assert.strictEqual(currentAmountOfBlogs+1, AfterCurrentAmountOfBlogs);
   assert.strictEqual(listOfBlogsAfterSaving.includes("Blog for testing"), true);
 });
-
-// test("a specific note is within the returned notes", async () => {
-//   const response = await api.get("/api/notes");
-
-//   const contents = response.body.map((e) => e.content);
-//   assert.strictEqual(contents.includes("HTML is easy"), true);
-// });
-
-// //test for POST new note
-// test("A valid note can be added!", async () => {
-//   const newNote = {
-//     content: "async await, simplifies making async calls",
-//     important: true,
-//   };
-//   await api
-//     .post("/api/notes")
-//     .send(newNote)
-//     .expect(201)
-//     .expect('Content-Type', /application\/json/);
-
-//   const notesAtEnd  = await helper.notesInDb();
-//   assert.strictEqual(notesAtEnd.length, helper.initialNotes.length + 1);
-
-//   const contents = notesAtEnd.map(note => note.content);
-//   assert(contents.includes("async await, simplifies making async calls"));
-// });
-
-// //test for: an empty note can not be added to db
-// test("An empty note can not be added!", async () => {
-//   const newNote = {
-//     important: true,
-//   };
-
-//   await api
-//     .post("/api/notes")
-//     .send(newNote)
-//     .expect(400)
-
-//   const notesAtend = await helper.notesInDb();
-//   assert.strictEqual(notesAtend.length, helper.initialNotes.length);
-
-// });
-
-// //test for: an empty note can not be added to db
-// test("a specific note can be viewed!!", async () => {
-//   const noteAtStart = await helper.notesInDb();
-//   const noteToView = noteAtStart[0];
-
-//   const resultNote = await api
-//     .get(`/api/notes/${noteToView.id}`)
-//     .expect(200)
-//     .expect('Content-Type', /application\/json/);
-
-//   assert.deepStrictEqual(resultNote.body, noteToView);
-
-// });
+ 
 
 after(async () => {
   await mongoose.connection.close();
