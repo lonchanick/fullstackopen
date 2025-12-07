@@ -5,6 +5,7 @@ const requestLogger  = (request, response, next) => {
   logger.info("Path: ", request.path);
   logger.info("Boddy: ", request.body);
   logger.info("---");
+  next();
 };
 
 const unknownEndpoint = (request, response) => {
@@ -14,16 +15,16 @@ const unknownEndpoint = (request, response) => {
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message);
   if (error.name === "CastError") {
-    return request.status(400).send({ error: "malformated id" });
+    return response.status(400).send({ error: "malformated id" });
   } else if (error.name === "ValidationError") {
-    return request.status(400).send({ error: error.message });
+    return response.status(400).send({ error: error.message });
   }
 
   next(error);
 };
 
 module.exports = { 
-    requestLogger, 
+    requestLogger,   
     unknownEndpoint, 
     errorHandler 
 };
