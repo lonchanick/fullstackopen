@@ -1,5 +1,4 @@
-//exercise 4.5 is not here
-const blogs = [
+const initialBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
     title: "React patterns",
@@ -50,17 +49,17 @@ const blogs = [
   }  
 ]
 
+// const { test, describe } = require("node:test");
+// const assert = require("node:assert");
+// const listHelper = require("../utils/list_helper");
 
-const { test, describe } = require("node:test");
-const assert = require("node:assert");
-const listHelper = require("../utils/list_helper"); 
+// describe("dummy function section: ", () => {
+//   test("dummy returns one", () => {
+//     const blogs = [];
 
-describe("Like counter section: ", () => {
-  test("testing like counter function:", () => {
+//     const result = listHelper.dummy(blogs);
+//     assert.strictEqual(result, 1);
+//   });
+// });
 
-    const result = listHelper.likeCounter(blogs);
-    assert.strictEqual(result, 36);
-  });
-});
-
-
+module.exports = {initialBlogs};
