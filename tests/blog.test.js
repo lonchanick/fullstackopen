@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require("node:test");
+const { test, after, beforeEach, describe } = require("node:test");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
@@ -13,7 +13,8 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs);
 });
 
-test("Blogs are returned as json", async () => {
+describe('First part test:', async ()=>{
+  test("Blogs are returned as json", async () => {
   await api
     .get("/api/blogs")
     .expect(200)
@@ -51,16 +52,51 @@ test("verifies that making an HTTP POST request to the /api/blogs URL successful
 
   const AfterCurrentAmountOfBlogs = (await api.get('/api/blogs')).body.length;
 
-  console.log('current amount of blogs: ', currentAmountOfBlogs);
-  console.log('after amount of blogs: ', AfterCurrentAmountOfBlogs);
+  // console.log('\tcurrent amount of blogs: ', currentAmountOfBlogs);
+  // console.log('\tafter amount of blogs: ', AfterCurrentAmountOfBlogs);
 
   const listOfBlogsAfterSaving = (await api.get('/api/blogs')).body.map(b => b.title);
-  console.log(listOfBlogsAfterSaving);
+  // console.log(listOfBlogsAfterSaving);
 
   assert.strictEqual(currentAmountOfBlogs+1, AfterCurrentAmountOfBlogs);
   assert.strictEqual(listOfBlogsAfterSaving.includes("Blog for testing"), true);
 });
+})
  
+describe("DELETE: /blogs/:id", async ()=>{
+  test('Succeeds with a valid ID', async ()=>{
+    const blogsAtStart = await helper.currentBlogsInDb();
+    const firstBlogOfTheList = blogsAtStart[0];
+    await api.delete(`/api/blogs/${firstBlogOfTheList.id}`)
+    .expect(204);
+
+    const blogsAtEnd = await helper.currentBlogsInDb();
+    assert.strictEqual(blogsAtStart.length, blogsAtEnd.length+1);
+  })
+})
+
+describe("UPDATE: /blogs/:id", async ()=>{
+  test('Succeeds with a valid ID', async ()=>{
+    const blogsAtStart = await helper.currentBlogsInDb();
+    const firstBlogOfTheList = blogsAtStart[0];
+    
+    const updatedBlog = await api.put(`/api/blogs/${firstBlogOfTheList.id}`)
+    .send({likes: 3141516})
+    .expect(200);
+
+    const blogsAtEnd = await helper.currentBlogsInDb();
+    const firstBlogOfTheListBefore = blogsAtEnd[0];
+
+    console.log('Blog likes before: ',firstBlogOfTheList.likes);
+    console.log('Blof likes after: ',firstBlogOfTheListBefore.likes);
+    
+    const validation = (firstBlogOfTheListBefore.likes === 3141516 
+    && (firstBlogOfTheList.likes != firstBlogOfTheListBefore.likes)) ? true : false;
+
+    assert(validation);
+  })
+})
+
 
 after(async () => {
   await mongoose.connection.close();
