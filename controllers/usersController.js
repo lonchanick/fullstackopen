@@ -1,26 +1,37 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const usersRouter = require("express").Router();
 const User = require("../models/user");
 
 usersRouter.post("/", async (request, response) => {
-    const {username, name, password} = request.body;
-    const saltRounds = 10;
-    const passwordHash  = await bcrypt.hash(password, saltRounds);
-    const newUser = new User({
-        username,
-        name,
-        passwordHash 
-    });
-    try {
-        const savedUser = await newUser.save();
-        response.status(200).json(savedUser);
-    } catch (error) {
-        if (error.name === 'MongoServerError' && error.code === 11000) {
-            // Duplicate key error (unique constraint violation)
-            return response.status(400).json({ error: 'username must be unique' });
-        }
-        throw error; // Re-throw other errors to be handled by error middleware
-    }
+  const { username, name, password } = request.body;
+  const saltRounds = 10;
+  const passwordHash = await bcrypt.hash(password, saltRounds);
+  const newUser = new User({
+    username,
+    name,
+    passwordHash,
+  });
+
+  const savedUser = await newUser.save();
+  response.status(200).json(savedUser);
+
+  // try {
+  //     const savedUser = await newUser.save();
+  //     response.status(200).json(savedUser);
+  // } catch (error) {
+  //     if (error.name === 'MongoServerError' && error.code === 11000) {
+  //         // Duplicate key error (unique constraint violation)
+  //         return response.status(400).json({ error: 'username must be unique' });
+  //     }
+  //     throw error; // Re-throw other errors to be handled by error middleware
+  // }
+});
+
+usersRouter.get("/", async (request, response) => {
+  const users = await User
+  .find({})
+  .populate("notes", {content: 1, important: 1});
+  response.json(users);
 });
 
 module.exports = usersRouter;

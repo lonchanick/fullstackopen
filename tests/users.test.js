@@ -32,13 +32,10 @@ describe("When there is initialy one user in DB", async () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    // console.log('>>> Response from mongo:\n',responseFromMongo.text);
-
     const usersAtEnd = await helper.usersInDb();
     assert.strictEqual(usersAtStart.length + 1, usersAtEnd.length);
     const usernameList = usersAtEnd.map((u) => u.username);
     assert(usernameList.includes(newUser.username));
-    // console.log("Last username: ", usernameList[usernameList.length - 1]);
   });
 
   test("Creation fails when username is alreay taken.", async () => {
@@ -55,8 +52,8 @@ describe("When there is initialy one user in DB", async () => {
       .expect("Content-Type", /application\/json/);
     
     const usersAtend = await helper.usersInDb();
-    // console.log(result.body.error);
     assert.strictEqual(usersAtStart.length, usersAtend.length); // No new user should be created
+    assert(result.body.error.includes('expected `username` to be unique'));
   });
 });
 
