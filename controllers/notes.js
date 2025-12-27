@@ -1,6 +1,13 @@
 const notesRouter = require("express").Router();
 const Note = require("../models/note");
 const User = require("../models/user");
+const jwt = require('jsonwebtoken');
+
+const getTokenFrom = (request)=>{
+  const authorization = request.get('authorization');
+  if(authorization && authorization.startsWith('Bearer '))
+    return authorization.replace('Bearer ','');
+}
 
 notesRouter.get("/", async (request, response) => {
   const notes = await Note.find({}).populate('user',{username:1, name: 1});
@@ -18,8 +25,18 @@ notesRouter.get("/:id", async (request, response) => {
 
 notesRouter.post("/", async (request, response) => {
   const body = request.body;
+  const isolatedToken = getTokenFrom(request);
+  const decodedToken = jwt.verify(isolatedToken, process.env.SECRET);
 
-  const user = await User.findById(body.userId);
+  if(!decodedToken.id)
+    return response.status(401).json({error: 'Token invalid'})
+
+  //decodedToken.id es el id del usuario porque cuando se creo el token
+  //la informacin que se uso fue el id y username:
+  /*he validity of the token is checked with jwt.verify. The 
+  method also decodes the token, or returns the Object which the 
+  token was based on. */ 
+  const user = await User.findById(decodedToken.id);
 
   if(!user) return response.status(400).json({error: 'userId missing or not valid'});
 
