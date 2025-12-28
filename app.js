@@ -5,6 +5,7 @@ const config = require('./utils/config');
 const blogRouter = require('./controllers/blog')
 const logger = require('./utils/logger');
 const middleWare = require('./utils/middleware');
+const userRouter = require('./controllers/user');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(cors());
 app.use(express.json())
 // app.use(middleWare.requestLogger);
 app.use('/api/blogs',blogRouter);
+app.use('/api/users',userRouter);
 app.use(middleWare.unknownEndpoint);
 app.use(middleWare.errorHandler);
 
